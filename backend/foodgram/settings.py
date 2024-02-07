@@ -109,15 +109,8 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'users.User'
 
-
-# При планировании архитектуры было решено,
-# что статические файлы Django должны быть доступны по адресу /static/
 STATIC_URL = '/static/'
-# Указываем корневую директорию для сборки статических файлов;
-# в контейнере это будет /app/collected_static
 STATIC_ROOT = BASE_DIR / 'collected_static'
-# Теперь при вызове команды python manage.py collectstatic
-# Django будет копировать все статические файлы в директорию collected_static 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
