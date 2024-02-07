@@ -69,17 +69,6 @@ class CustomUserViewSet(DjoserUserViewSet):
                 return Response('Удален', status=status.HTTP_204_NO_CONTENT)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
-
-
-
-
-
-
     @action(detail=False, methods=['GET'],
             permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
