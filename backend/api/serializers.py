@@ -1,7 +1,7 @@
-from rest_framework import serializers, status
-from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
+from rest_framework import serializers, status
+from djoser.serializers import UserCreateSerializer
 import base64
 from recipes.models import (Tag, Ingredient, Recipe, FavoritRecipe,
                             ShoppingCart, RecipeIngredient)
