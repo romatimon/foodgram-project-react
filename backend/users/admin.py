@@ -5,9 +5,13 @@ from .models import Subscription, User
 
 @admin.register(Subscription)
 class SubscribeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('author', 'user')
+    search_fields = ('author',)
+    list_filter = ('author', 'user')
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'first_name', 'last_name', 'email')
+    search_fields = ('username',)
     list_filter = ('username', 'email')
