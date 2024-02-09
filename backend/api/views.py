@@ -19,7 +19,8 @@ from .serializers import CustomUserSerializer
 from users.models import Subscription
 from .serializers import (TagSerializer, RecipeFavoriteShopSerializer,
                           IngredientSerializer, RecipeReadSerializer,
-                          RecipeCreateUpdateSerializer, SubscriptionSerializer)
+                          RecipeCreateUpdateSerializer,
+                          SubscribeListSerializer)
 from recipes.models import (Tag, Ingredient, Recipe, ShoppingCart,
                             FavoritRecipe, RecipeIngredient)
 
@@ -43,21 +44,17 @@ class CustomUserViewSet(DjoserUserViewSet):
         detail=True,
         methods=['post', 'delete'],
         permission_classes=[IsAuthenticated],)
-    def subscribe(self, request, id=None):
+    def subscribe(self, request, **kwargs):
         user = request.user
-        author = get_object_or_404(User, id=id)
+        author_id = self.kwargs.get('id')
+        author = get_object_or_404(User, id=author_id)
 
         if request.method == 'POST':
-            if user == author:
-                return Response('Вы не можете подписываться на самого себя',
-                                status=status.HTTP_400_BAD_REQUEST)
-            if Subscription.objects.filter(user=user, author=author).exists():
-                return Response('Вы уже подписаны на данного пользователя',
-                                status=status.HTTP_400_BAD_REQUEST)
-            subscription = Subscription.objects.create(user=user,
-                                                       author=author)
-            serializer = SubscriptionSerializer(subscription,
-                                                context={'request': request})
+            serializer = SubscribeListSerializer(author,
+                                                 data=request.data,
+                                                 context={"request": request})
+            serializer.is_valid(raise_exception=True)
+            Subscription.objects.create(user=user, author=author)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
@@ -65,17 +62,19 @@ class CustomUserViewSet(DjoserUserViewSet):
                                            author=author).exists():
                 Subscription.objects.filter(user=request.user,
                                             author=author).delete()
-                return Response('Удален', status=status.HTTP_204_NO_CONTENT)
+                return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['GET'],
-            permission_classes=[IsAuthenticated])
+    @action(
+        detail=False,
+        permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
-        subscription = Subscription.objects.filter(user=self.request.user)
-        pages = self.paginate_queryset(subscription)
-        serializer = SubscriptionSerializer(pages,
-                                            many=True,
-                                            context={'request': request})
+        user = request.user
+        queryset = User.objects.filter(subscribing__user=user)
+        pages = self.paginate_queryset(queryset)
+        serializer = SubscribeListSerializer(pages,
+                                             many=True,
+                                             context={'request': request})
         return self.get_paginated_response(serializer.data)
 
 
@@ -150,6 +149,24 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response('Этого рецепта нет в избранном',
                             status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @action(
         methods=['post', 'delete'],
         detail=True,
@@ -182,6 +199,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                             recipe=recipe).delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @action(
         methods=['get'],
