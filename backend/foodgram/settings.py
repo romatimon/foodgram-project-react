@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG', 'False') == "True"
 
-# ALLOWED_HOSTS = ['158.160.83.187', '127.0.0.1', 'localhost', 'fdgm.ddns.net']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(', ')
 
 
 INSTALLED_APPS = [
@@ -141,7 +141,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'api.paginators.LimitPagination',
-
 }
 
 

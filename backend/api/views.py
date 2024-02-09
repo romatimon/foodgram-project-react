@@ -31,7 +31,6 @@ class CustomUserViewSet(DjoserUserViewSet):
     """Вьюсет для пользователя."""
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
-    pagination_class = LimitPagination
 
     @action(
         methods=['get'],
@@ -102,6 +101,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюсет для рецептов."""
     queryset = Recipe.objects.all()
     serializer_class = RecipeReadSerializer
+    pagination_class = LimitPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
