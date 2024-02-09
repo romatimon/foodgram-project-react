@@ -234,11 +234,47 @@ class SubscribeListSerializer(CustomUserSerializer):
 
 class RecipeFavoriteShopSerializer(serializers.ModelSerializer):
     """Cериализатор для списка покупок и избранных рецептов."""
-    name = serializers.ReadOnlyField()
-    cooking_time = serializers.ReadOnlyField()
-    image = Base64ImageField(read_only=True)
 
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
         read_only_fields = ('id', 'name', 'image', 'cooking_time')
+
+
+class ShoppingCartSerializer(serializers.ModelSerializer):
+    """ Сериализатор для списка покупок. """
+
+    class Meta:
+        model = ShoppingCart
+        fields = ('user', 'recipe')
+
+    def validate(self, data):
+        user = self.context('request').user
+        if user.shoppingcart.filter(recipe=data['recipe']).exists():
+            raise serializers.ValidationError(
+                'Рецепт уже добавлен в корзину')
+        return data
+
+    def to_representation(self, instance):
+        return RecipeFavoriteShopSerializer(instance.recipe, context={
+            'request': self.context.get('request')}).data
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    """ Сериализатор модели Избранное. """
+
+    class Meta:
+        model = FavoritRecipe
+        fields = ('user', 'recipe')
+
+    def validate(self, data):
+        user = self.context('request').user
+        if user.favorites.filter(recipe=data['recipe']).exists():
+            raise serializers.ValidationError(
+                'Рецепт уже добавлен в избранное')
+        return data
+
+    def to_representation(self, instance):
+        return RecipeFavoriteShopSerializer(instance.recipe, context={
+            'request': self.context.get('request')}).data
+

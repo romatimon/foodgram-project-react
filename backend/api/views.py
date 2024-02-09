@@ -211,10 +211,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 
-
-
-
-
     @action(
         methods=['get'],
         detail=False,
