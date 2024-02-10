@@ -2,7 +2,7 @@ import base64
 
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
-
+from rest_framework.validators import UniqueTogetherValidator
 from djoser.serializers import UserCreateSerializer
 
 from rest_framework import serializers, status
@@ -164,10 +164,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             for ingredient in ingredients)
 
     def create(self, validated_data):
-        # author = self.context.get('request').user
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(**validated_data)  # добавляю, author=author - получаю ошибку(django.db.models.manager.BaseManager._get_queryset_methods.<locals>.create_method.<locals>.manager_method() got multiple values for keyword argument 'author')
+        recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
         self.create_ingredients(recipe=recipe, ingredients=ingredients)
         return recipe
@@ -234,7 +233,6 @@ class SubscribeListSerializer(CustomUserSerializer):
 
 class RecipeFavoriteShopSerializer(serializers.ModelSerializer):
     """Cериализатор для списка покупок и избранных рецептов."""
-
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
@@ -243,17 +241,16 @@ class RecipeFavoriteShopSerializer(serializers.ModelSerializer):
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
     """ Сериализатор для списка покупок. """
-
     class Meta:
         model = ShoppingCart
         fields = ('user', 'recipe')
-
-    def validate(self, data):
-        user = self.context('request').user
-        if user.shoppingcart.filter(recipe=data['recipe']).exists():
-            raise serializers.ValidationError(
-                'Рецепт уже добавлен в корзину')
-        return data
+        validators = [
+            UniqueTogetherValidator(
+                queryset=ShoppingCart.objects.all(),
+                fields=('user', 'recipe'),
+                message='Рецепт уже добавлен в список покупок.'
+            )
+        ]
 
     def to_representation(self, instance):
         return RecipeFavoriteShopSerializer(instance.recipe, context={
@@ -262,19 +259,18 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
 class FavoriteSerializer(serializers.ModelSerializer):
     """ Сериализатор модели Избранное. """
-
     class Meta:
         model = FavoritRecipe
         fields = ('user', 'recipe')
 
-    def validate(self, data):
-        user = self.context('request').user
-        if user.favorites.filter(recipe=data['recipe']).exists():
-            raise serializers.ValidationError(
-                'Рецепт уже добавлен в избранное')
-        return data
+        validators = [
+            UniqueTogetherValidator(
+                queryset=FavoritRecipe.objects.all(),
+                fields=('user', 'recipe'),
+                message='Рецепт уже добавлен в избранное.'
+            )
+        ]
 
     def to_representation(self, instance):
         return RecipeFavoriteShopSerializer(instance.recipe, context={
             'request': self.context.get('request')}).data
-
