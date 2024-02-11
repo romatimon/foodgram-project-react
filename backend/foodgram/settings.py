@@ -9,13 +9,15 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-+*w4_r+0s9$^@qu#k9t#hldho16lb5(2#(&o9slsg%z449z@u5'
 
+DEBUG = False
 
-DEBUG = os.getenv('DEBUG', 'False') == "True"
+# DEBUG = os.getenv('DEBUG', 'False') == "True"
 
+ALLOWED_HOSTS = ['158.160.83.187', '127.0.0.1', 'localhost', 'fdgm.ddns.net']
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(', ')
+# ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(', ')
 
 
 INSTALLED_APPS = [
@@ -66,6 +68,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
+
 
 DATABASES = {
     'default': {
