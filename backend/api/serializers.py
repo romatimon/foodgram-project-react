@@ -2,15 +2,13 @@ import base64
 
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
-from rest_framework.validators import UniqueTogetherValidator
 from djoser.serializers import UserCreateSerializer
-
 from rest_framework import serializers, status
+from rest_framework.validators import UniqueTogetherValidator
 
-from users.models import Subscription
 from recipes.models import (Ingredient, FavoritRecipe, Recipe,
                             RecipeIngredient, ShoppingCart, Tag)
-
+from users.models import Subscription
 
 User = get_user_model()
 
@@ -201,7 +199,8 @@ class SubscribeListSerializer(CustomUserSerializer):
     recipes = serializers.SerializerMethodField()
 
     class Meta(CustomUserSerializer.Meta):
-        fields = CustomUserSerializer.Meta.fields + ('recipes_count', 'recipes')
+        fields = CustomUserSerializer.Meta.fields + ('recipes_count',
+                                                     'recipes')
         read_only_fields = ('email', 'username', 'first_name', 'last_name')
 
     def validate(self, data):

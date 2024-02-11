@@ -1,29 +1,32 @@
+from django.contrib.auth import get_user_model
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
+
 from rest_framework import status, viewsets
-from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import (SAFE_METHODS, AllowAny,
                                         IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
-
-from django.db.models import Sum
-from django.http import HttpResponse
-from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 
 from .filters import IngredientFilter, RecipeFilter
 from .paginators import LimitPagination
 from .permissions import IsOwnerOrReadOnly
-from .serializers import CustomUserSerializer
-from users.models import Subscription
-from .serializers import (
-                          IngredientSerializer, FavoriteSerializer,
-                          RecipeReadSerializer, RecipeCreateUpdateSerializer,
-                          SubscribeListSerializer, ShoppingCartSerializer,
-                          TagSerializer)
 from recipes.models import (FavoritRecipe, Ingredient, Recipe,
                             RecipeIngredient, ShoppingCart, Tag)
+from .serializers import (CustomUserSerializer,
+                          IngredientSerializer,
+                          FavoriteSerializer,
+                          RecipeReadSerializer,
+                          RecipeCreateUpdateSerializer,
+                          SubscribeListSerializer,
+                          ShoppingCartSerializer,
+                          TagSerializer)
+
+from users.models import Subscription
 
 User = get_user_model()
 

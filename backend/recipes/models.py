@@ -1,8 +1,6 @@
 from colorfield.fields import ColorField
-
-from django.db import models
 from django.core import validators
-
+from django.db import models
 from users.models import User
 
 MAX_LENGTH = 100
