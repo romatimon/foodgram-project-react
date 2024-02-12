@@ -68,7 +68,7 @@ class IngredientRecipeCreateSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeReadeSerializer(serializers.ModelSerializer):
-    '''Сериализатор для чтения ингредиентов в рецепте.'''
+    """Сериализатор для чтения ингредиентов в рецепте."""
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
@@ -80,7 +80,7 @@ class IngredientRecipeReadeSerializer(serializers.ModelSerializer):
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
-    '''Сериализатор для чтения рецептов.'''
+    """Сериализатор для чтения рецептов."""
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializer(read_only=True)
     ingredients = IngredientRecipeReadeSerializer(many=True, read_only=True,
@@ -239,7 +239,7 @@ class RecipeFavoriteShopSerializer(serializers.ModelSerializer):
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
-    """ Сериализатор для списка покупок. """
+    """Сериализатор для списка покупок."""
     class Meta:
         model = ShoppingCart
         fields = ('user', 'recipe')
@@ -257,7 +257,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    """ Сериализатор модели Избранное. """
+    """Сериализатор модели Избранное."""
     class Meta:
         model = FavoritRecipe
         fields = ('user', 'recipe')
