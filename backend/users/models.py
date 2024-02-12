@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Q, F
 
-MAX_LENGTH = 30
+from foodgram import constants
 
 
 class User(AbstractUser):
@@ -11,16 +12,16 @@ class User(AbstractUser):
         unique=True)
     first_name = models.CharField(
         verbose_name='Имя',
-        max_length=MAX_LENGTH)
+        max_length=constants.MAX_LENGTH)
     last_name = models.CharField(
         verbose_name='Фамилия',
-        max_length=MAX_LENGTH)
+        max_length=constants.MAX_LENGTH)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('username',)
         verbose_name = 'пользователь'
         verbose_name_plural = 'Пользователи'
 
@@ -47,7 +48,10 @@ class Subscription(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'],
-                name='unique_subscriber')]
+                name='unique_subscriber'),
+            models.CheckConstraint(
+                check=Q(user=F('author')),
+                name='no_subscribe_yourself')]
 
     def __str__(self):
         return f'Пользователь {self.user} подписан на {self.author}'

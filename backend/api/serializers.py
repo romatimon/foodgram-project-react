@@ -107,7 +107,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
-    '''Сериализатор для создания рецептов.'''
+    """Сериализатор для создания рецептов."""
     author = serializers.HiddenField(
         default=serializers.CurrentUserDefault())
     tags = serializers.PrimaryKeyRelatedField(
