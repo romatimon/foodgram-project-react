@@ -144,4 +144,3 @@ DJOSER = {
         'user': 'api.serializers.CustomUserSerializer',
     }
 }
-
