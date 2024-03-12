@@ -20,7 +20,7 @@
 ***- Клонировать репозиторий:***
 ```
 git clone git@github.com:romatimon/foodgram-project-react.git
-
+```
 В директории foodgram-project-react/infra создайте файл .env и наполните его по следющему шаблону:
 
 ```
@@ -36,11 +36,9 @@ SECRET_KEY=<ваш секретный ключ для django проекта>
 ### Команды для запуска приложения в Docker-контейнерах:
 
 Перейти в директорию:
-
 ```
 cd foodgram-project-react/
 ```
-
 Запустить контейнеры:
 
 ```
