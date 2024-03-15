@@ -12,6 +12,12 @@
 - Nginx
 - PostgreSQL
 - Gunicorn
+- React
+- JWT
+- JSON
+- YAML
+- Telegram
+- Postman
 
 ### Проект доступен по ссылке:
  - https://fdgm.ddns.net/
